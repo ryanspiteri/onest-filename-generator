@@ -123,6 +123,7 @@
   <div class="field"><label>Product</label><select id="product"></select></div>
   <div class="field"><label>Source</label><select id="source"></select></div>
   <div class="field full"><label>Concept / angle</label><input id="concept" placeholder="Stubborn Weight Stress" autocomplete="off"></div>
+  <div class="field full"><label>Campaign (optional)</label><input id="campaign" placeholder="e.g. EOFY Sale — leave blank for a normal product creative" autocomplete="off"></div>
 </div>
 
 <div class="divider"><span>Variations</span><div class="ln"></div></div>
@@ -232,15 +233,16 @@ function selectedRatios(){
 function composeName(v, ratio){
   const id=idClean(val('id')); if(!id) return '';
   const product=val('product'); const concept=kebab(val('concept'));
+  const cmp = val('campaign') ? 'CMP-'+kebab(val('campaign')) : '';
   const ext=val('ext')||(currentType==='static'?'.png':'.mp4');
   if(currentType==='static'){
     const headline=kebab(v.f1), angle=kebab(v.f2);
-    return [id,product,concept,'STATIC',headline,angle,ratio].filter(Boolean).join('_')+ext;
+    return [id,product,cmp,concept,'STATIC',headline,angle,ratio].filter(Boolean).join('_')+ext;
   }
   const actor=kebab(v.f1), hook=kebab(v.f2);
   const hookPart = hook ? 'HOOK-'+hook : '';
   const source=val('source');
-  return [id,product,concept,actor,hookPart,ratio,source].filter(Boolean).join('_')+ext;
+  return [id,product,cmp,concept,actor,hookPart,ratio,source].filter(Boolean).join('_')+ext;
 }
 function currentNames(){
   if(!idClean(val('id'))) return [];
