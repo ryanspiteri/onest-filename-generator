@@ -6,10 +6,13 @@ compatibility_date = "2026-06-18"
 # /create-task. Adding routes would otherwise disable it.
 workers_dev = true
 
-# Serve the generator at onestos.org/filenamegenerator (path-scoped — does not
-# affect any other onestos.org route).
+# Serve the generator on its own subdomain. A path on onestos.org gets shadowed by
+# that app's PWA service worker (it serves the cached app shell for any same-origin
+# navigation, so the team sees the SPA's 404). A separate subdomain is a different
+# origin the service worker can't intercept. custom_domain = true makes Cloudflare
+# create the DNS record + cert + route automatically.
 routes = [
-  { pattern = "onestos.org/filenamegenerator*", zone_name = "onestos.org" }
+  { pattern = "generator.onestos.org", custom_domain = true }
 ]
 
 # Atomic creative-ID counter for the ONEST Filename Generator.

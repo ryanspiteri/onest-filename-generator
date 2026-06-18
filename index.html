@@ -160,7 +160,10 @@
 </div>
 
 <script>
-const HELPER = "https://onest-creative-id.ryan-6df.workers.dev";
+// Served from generator.onestos.org the helper endpoints are same-origin, so call
+// them with a relative path — robust even on networks that block *.workers.dev. On
+// the GitHub Pages copy, fall back to the absolute Worker URL.
+const HELPER = location.hostname.endsWith("onestos.org") ? "" : "https://onest-creative-id.ryan-6df.workers.dev";
 const LISTS = { video: "901605225338", static: "900302632860" };
 
 const PRODUCTS = [

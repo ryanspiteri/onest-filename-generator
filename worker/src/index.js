@@ -74,9 +74,20 @@ export default {
         return Response.json({ id: j.id, url: j.url, name: j.name }, { headers: HEADERS });
       }
 
-      if (url.pathname === "/filenamegenerator" || url.pathname === "/filenamegenerator/") {
-        // Serve the generator under onestos.org/filenamegenerator by proxying the
-        // GitHub Pages site (single source of truth — no duplicated HTML).
+      if (url.pathname === "/health") {
+        return Response.json(
+          { ok: true, service: "onest-creative-id" },
+          { headers: HEADERS },
+        );
+      }
+
+      if (
+        url.pathname === "/" ||
+        url.pathname === "/filenamegenerator" ||
+        url.pathname === "/filenamegenerator/"
+      ) {
+        // Serve the generator (proxy the GitHub Pages site — single source of truth,
+        // no duplicated HTML). Lives at the root of generator.onestos.org.
         const page = await fetch("https://ryanspiteri.github.io/onest-filename-generator/", {
           cf: { cacheTtl: 300 },
         });
@@ -84,13 +95,6 @@ export default {
         return new Response(html, {
           headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" },
         });
-      }
-
-      if (url.pathname === "/" || url.pathname === "/health") {
-        return Response.json(
-          { ok: true, service: "onest-creative-id" },
-          { headers: HEADERS },
-        );
       }
 
       return Response.json({ error: "not found" }, { status: 404, headers: HEADERS });
