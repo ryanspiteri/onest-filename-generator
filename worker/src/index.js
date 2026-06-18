@@ -21,6 +21,11 @@ export default {
 
     try {
       if (url.pathname === "/next") {
+        // POST-only: claiming mutates state, so a GET (scanners, prefetchers,
+        // link previews) must not burn an ID.
+        if (request.method !== "POST") {
+          return Response.json({ error: "use POST to claim an ID" }, { status: 405, headers: HEADERS });
+        }
         // Atomic claim: D1 serialises writes, so RETURNING hands each
         // caller a distinct value.
         const row = await env.DB
@@ -67,6 +72,18 @@ export default {
           return Response.json({ error: "clickup error", detail: j }, { status: 502, headers: HEADERS });
         }
         return Response.json({ id: j.id, url: j.url, name: j.name }, { headers: HEADERS });
+      }
+
+      if (url.pathname === "/filenamegenerator" || url.pathname === "/filenamegenerator/") {
+        // Serve the generator under onestos.org/filenamegenerator by proxying the
+        // GitHub Pages site (single source of truth — no duplicated HTML).
+        const page = await fetch("https://ryanspiteri.github.io/onest-filename-generator/", {
+          cf: { cacheTtl: 300 },
+        });
+        const html = await page.text();
+        return new Response(html, {
+          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" },
+        });
       }
 
       if (url.pathname === "/" || url.pathname === "/health") {

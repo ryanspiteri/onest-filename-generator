@@ -2,6 +2,16 @@ name = "onest-creative-id"
 main = "src/index.js"
 compatibility_date = "2026-06-18"
 
+# Keep the workers.dev URL alive — the generator calls it for /next, /peek and
+# /create-task. Adding routes would otherwise disable it.
+workers_dev = true
+
+# Serve the generator at onestos.org/filenamegenerator (path-scoped — does not
+# affect any other onestos.org route).
+routes = [
+  { pattern = "onestos.org/filenamegenerator*", zone_name = "onestos.org" }
+]
+
 # Atomic creative-ID counter for the ONEST Filename Generator.
 # GET /next  -> claims the next ID (atomic increment), returns { "id": 59 }
 # GET /peek  -> { "current": 58, "next": 59 } without incrementing

@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ONEST Filename Generator</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0e13">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Filename Gen">
 <style>
   :root{
     --bg:#0b0e13; --panel:#11161f; --panel2:#0e141c; --line:#262d38;
@@ -294,7 +300,7 @@ async function claimId(){
   const btn=document.getElementById('getid'), hint=document.getElementById('idhint');
   btn.disabled=true; const label=btn.textContent; btn.textContent='…';
   try{
-    const r=await fetch(HELPER+'/next',{cache:'no-store'}); const j=await r.json();
+    const r=await fetch(HELPER+'/next',{method:'POST',cache:'no-store'}); const j=await r.json();
     document.getElementById('id').value=j.id; hint.classList.remove('warn');
     hint.innerHTML='Claimed ID <b>'+j.id+'</b> for this task — it now leads every filename below.';
     rebuildOutputs();
