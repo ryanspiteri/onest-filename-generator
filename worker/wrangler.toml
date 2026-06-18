@@ -1,0 +1,13 @@
+name = "onest-creative-id"
+main = "src/index.js"
+compatibility_date = "2026-06-18"
+
+# Atomic creative-ID counter for the ONEST Filename Generator.
+# GET /next  -> claims the next ID (atomic increment), returns { "id": 59 }
+# GET /peek  -> { "current": 58, "next": 59 } without incrementing
+# D1 serialises writes per database, so two editors never get the same number.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "onest-creative-ids"
+database_id = "7522e4c2-9dd0-4b0d-8be1-5b690cbbc9cb"
