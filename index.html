@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONEST Filename Generator</title>
+<style>
+  :root{
+    --bg:#0b0e13; --panel:#11161f; --panel2:#0e141c; --line:#262d38;
+    --white:#ffffff; --muted:#808893; --soft:#c3c9d2; --red:#f5232b; --blue:#2e63f6;
+    --green:#7be88a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--white);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    font-size:13px; -webkit-font-smoothing:antialiased;
+    padding:16px; width:430px; margin:0 auto;
+  }
+  .mono{font-family:ui-monospace,Menlo,"Roboto Mono",Consolas,monospace}
+  header{display:flex;align-items:center;gap:9px;margin-bottom:3px}
+  header .dot{width:14px;height:14px;border-radius:4px;background:var(--red)}
+  header h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.2px}
+  .sub{font-size:11px;color:var(--muted);margin:3px 0 14px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field.full{grid-column:1 / -1}
+  label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  input,select{
+    background:var(--panel2);border:1px solid var(--line);color:var(--white);
+    border-radius:8px;padding:9px 10px;font-size:13px;width:100%;outline:none;font-family:inherit;
+  }
+  input:focus,select:focus{border-color:var(--red)}
+  input::placeholder{color:#566}
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .divider{grid-column:1 / -1;display:flex;align-items:center;gap:9px;margin:4px 0 1px}
+  .divider span{font-size:9.5px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;font-weight:700;white-space:nowrap}
+  .divider .ln{flex:1;height:1px;background:var(--line)}
+  .out{margin-top:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .out .hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .out .hd .bar{width:13px;height:13px;border-radius:4px}
+  .out .hd h2{font-size:11.5px;margin:0;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+  .box{display:flex;gap:8px;align-items:stretch}
+  .val{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;color:var(--green);word-break:break-all;line-height:1.45;min-height:38px}
+  button.copy{border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;padding:0 14px;cursor:pointer;white-space:nowrap;font-family:inherit;background:var(--red)}
+  button.copy.blue{background:var(--blue)}
+  button.copy:hover{filter:brightness(1.1)}
+  button.copy.ok{background:#1f8f3a}
+  .foot{margin-top:14px;font-size:10.5px;color:var(--muted);line-height:1.55}
+  .foot b{color:var(--soft);font-weight:700}
+  .reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:7px 11px;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit}
+  .reset:hover{color:#fff;border-color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="dot"></div><h1>ONEST Filename Generator</h1></header>
+<div class="sub">Name an ad creative. The Drive agent then files it, double-checks the aspect from the file, and links the ClickUp task — so search never breaks.</div>
+
+<div class="grid">
+  <div class="field"><label>NAS ID</label><input id="nasid" placeholder="A1042" autocomplete="off"></div>
+  <div class="field"><label>Product</label><select id="product"></select></div>
+  <div class="field full"><label>Parent video</label><input id="parent" placeholder="Menopause Mech" autocomplete="off"></div>
+  <div class="field"><label>Variant</label><input id="variant" placeholder="V02" autocomplete="off"></div>
+  <div class="field"><label>Talent / actor</label><input id="talent" placeholder="Cath" autocomplete="off"></div>
+  <div class="field full"><label>Hook (describe it)</label><input id="hook" placeholder="No one tells women this" autocomplete="off"></div>
+
+  <div class="divider"><span>Usually left as-is</span><div class="ln"></div></div>
+  <div class="field"><label>Aspect</label><select id="aspect"></select></div>
+  <div class="field"><label>Source</label><select id="source"></select></div>
+  <div class="field full"><label>File type</label><select id="ext"></select></div>
+</div>
+
+<div class="out">
+  <div class="hd"><span class="bar" style="background:var(--red)"></span><h2>Filename</h2></div>
+  <div class="box"><div class="val mono" id="outFile">&nbsp;</div><button class="copy" data-target="outFile">Copy</button></div>
+</div>
+
+<div class="out">
+  <div class="hd"><span class="bar" style="background:var(--blue)"></span><h2>ClickUp task name</h2></div>
+  <div class="box"><div class="val mono" id="outTask">&nbsp;</div><button class="copy blue" data-target="outTask">Copy</button></div>
+</div>
+
+<button class="reset" id="reset">Clear all</button>
+
+<div class="foot">
+  <b>Float it on your desktop:</b> open this file in Chrome &rarr; menu (three dots) &rarr; Cast, save &amp; share &rarr; Install page as app. It opens in its own small window you can keep open.<br>
+  <b>Product not listed?</b> Don't free-type it — add it to the master list first, then it appears here.
+</div>
+
+<script>
+const PRODUCTS = [
+  ["HB","HyperBurn"],["HBE","HyperBurn Energy"],["HBNS","Non-Stim HyperBurn"],
+  ["TS","ThermoSleep"],["TB","ThermoBurn Caps"],["BAL","Balance"],["HL","HyperLoad"],
+  ["HP","HyperPump"],["HF","HyperForm"],["AL","AminoLoad"],["BCAA","BCAA"],
+  ["CR","Creatine"],["COL","Collagen"],["ENH","Enhance"],["NM","Night Mood"],
+  ["PRO","Protein"],["WIP","Whey Iso Pro"],["VCP","Vegan Complete Pro"],
+  ["SG","SuperGreens"],["STK","Stacks"],["AX","Astaxanthin"]
+];
+const ASPECTS = [["9x16","9x16 (reels/stories)"],["4x5","4x5 (feed)"],["1x1","1x1 (square)"],["16x9","16x9 (landscape)"]];
+const SOURCES = [["INT","INT (in-house)"],["EXT","EXT (external)"]];
+const EXTS = [[".mp4","MP4"],[".mov","MOV"],[".png","PNG"],[".jpg","JPG"]];
+
+function fillSelect(id, rows, placeholder){
+  const el = document.getElementById(id);
+  if (placeholder) el.innerHTML = '<option value="" disabled selected>'+placeholder+'</option>';
+  rows.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; el.appendChild(o); });
+}
+fillSelect('product', PRODUCTS, 'Select product');
+// Defaults — the common case, so the team rarely touches these (the agent verifies aspect anyway):
+fillSelect('aspect', ASPECTS, '');  document.getElementById('aspect').value = '9x16';
+fillSelect('source', SOURCES, '');  document.getElementById('source').value = 'INT';
+fillSelect('ext', EXTS, '');        document.getElementById('ext').value = '.mp4';
+
+// Title-Case-Kebab: "no one tells women" -> "No-One-Tells-Women"
+function kebab(s){
+  return (s||'').trim()
+    .replace(/[^A-Za-z0-9\s-]/g,'')
+    .split(/[\s-]+/).filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase()+w.slice(1))
+    .join('-');
+}
+function variantClean(s){
+  s = (s||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!s) return '';
+  if(/^\d+$/.test(s)) return 'V'+s.padStart(2,'0');
+  return s;
+}
+function nasClean(s){ return (s||'').trim().toUpperCase().replace(/[^A-Z0-9-]/g,''); }
+
+function build(){
+  const nasid = nasClean(val('nasid'));
+  const product = val('product');
+  const parent = kebab(val('parent'));
+  const variant = variantClean(val('variant'));
+  const hook = kebab(val('hook'));
+  const aspect = val('aspect');
+  const source = val('source');
+  const talent = kebab(val('talent'));
+  const ext = val('ext') || '.mp4';
+
+  const fileParts = [nasid, product, parent, variant, hook, aspect, source, talent].filter(Boolean);
+  const file = fileParts.length ? fileParts.join('_') + ext : '';
+  const taskParts = [product, parent, variant].filter(Boolean);
+  const task = taskParts.join('_');
+
+  setOut('outFile', file || '—');
+  setOut('outTask', task || '—');
+}
+function val(id){ return document.getElementById(id).value || ''; }
+function setOut(id, s){ document.getElementById(id).textContent = s; }
+
+document.querySelectorAll('input,select').forEach(el=>{
+  el.addEventListener('input', build);
+  el.addEventListener('change', build);
+});
+document.querySelectorAll('button.copy').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    const t = document.getElementById(btn.dataset.target).textContent;
+    if(!t || t==='—') return;
+    try{ await navigator.clipboard.writeText(t); }catch(e){
+      const r=document.createRange(); r.selectNodeContents(document.getElementById(btn.dataset.target));
+      const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); sel.removeAllRanges();
+    }
+    const old=btn.textContent; btn.textContent='Copied'; btn.classList.add('ok');
+    setTimeout(()=>{ btn.textContent=old; btn.classList.remove('ok'); }, 1100);
+  });
+});
+document.getElementById('reset').addEventListener('click', ()=>{
+  document.querySelectorAll('input').forEach(i=>i.value='');
+  document.getElementById('product').selectedIndex=0;
+  document.getElementById('aspect').value='9x16';
+  document.getElementById('source').value='INT';
+  document.getElementById('ext').value='.mp4';
+  build();
+});
+build();
+</script>
+</body>
+</html>
