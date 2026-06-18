@@ -6,7 +6,7 @@
 const HEADERS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Cache-Control": "no-store",
 };
@@ -36,6 +36,37 @@ export default {
           .first();
         const current = row ? row.val : 0;
         return Response.json({ current, next: current + 1 }, { headers: HEADERS });
+      }
+
+      if (url.pathname === "/create-task" && request.method === "POST") {
+        // Create the ClickUp task for a creative. Locked to the two ad boards
+        // and to ID-prefixed names so the open endpoint can't be abused freely.
+        const ALLOWED = new Set([
+          "901605225338", // VIDEO AD BOARD
+          "900302632860", // GRAPHIC AD BOARD
+        ]);
+        const body = await request.json().catch(() => ({}));
+        const listId = String(body.listId || "");
+        const name = String(body.name || "").trim();
+        if (!ALLOWED.has(listId)) {
+          return Response.json({ error: "list not allowed" }, { status: 400, headers: HEADERS });
+        }
+        if (!/^\d/.test(name)) {
+          return Response.json({ error: "name must start with the creative ID" }, { status: 400, headers: HEADERS });
+        }
+        if (!env.CLICKUP_TOKEN) {
+          return Response.json({ error: "server not configured" }, { status: 500, headers: HEADERS });
+        }
+        const cu = await fetch("https://api.clickup.com/api/v2/list/" + listId + "/task", {
+          method: "POST",
+          headers: { "Authorization": env.CLICKUP_TOKEN, "Content-Type": "application/json" },
+          body: JSON.stringify({ name }),
+        });
+        const j = await cu.json().catch(() => ({}));
+        if (!cu.ok) {
+          return Response.json({ error: "clickup error", detail: j }, { status: 502, headers: HEADERS });
+        }
+        return Response.json({ id: j.id, url: j.url, name: j.name }, { headers: HEADERS });
       }
 
       if (url.pathname === "/" || url.pathname === "/health") {

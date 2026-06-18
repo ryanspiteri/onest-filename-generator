@@ -16,7 +16,7 @@
     background:var(--bg); color:var(--white);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
     font-size:13px; -webkit-font-smoothing:antialiased;
-    padding:16px; width:430px; margin:0 auto;
+    padding:16px; width:440px; margin:0 auto;
   }
   .mono{font-family:ui-monospace,Menlo,"Roboto Mono",Consolas,monospace}
   header{display:flex;align-items:center;gap:9px;margin-bottom:3px}
@@ -37,7 +37,6 @@
     border-radius:8px;padding:9px 10px;font-size:13px;width:100%;outline:none;font-family:inherit;
   }
   input:focus,select:focus{border-color:var(--red)}
-  input:disabled{opacity:.55}
   input::placeholder{color:#566}
   select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
     background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
@@ -50,26 +49,35 @@
   .getid:disabled{opacity:.55;cursor:default}
   .hint{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.45}
   .hint b{color:var(--green);font-weight:700}
-  .hint.warn b{color:var(--red)}
+  .hint.warn b,.hint.warn{color:var(--red)}
+  .hint a{color:var(--blue);font-weight:700}
 
-  .divider{grid-column:1 / -1;display:flex;align-items:center;gap:9px;margin:6px 0 1px}
+  .divider{display:flex;align-items:center;gap:9px;margin:14px 0 9px}
   .divider span{font-size:9.5px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;font-weight:700;white-space:nowrap}
   .divider .ln{flex:1;height:1px;background:var(--line)}
   .is-hidden{display:none !important}
 
-  .drop{grid-column:1 / -1;border:1.5px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);font-size:11.5px;cursor:pointer;line-height:1.5;transition:border-color .15s,background .15s}
-  .drop:hover{border-color:var(--muted)}
-  .drop.drag{border-color:var(--red);background:rgba(245,35,43,.06);color:var(--soft)}
-  .drop b{color:var(--soft);font-weight:700}
-  .filemeta{grid-column:1 / -1;font-size:10.5px;color:var(--green);margin-top:2px;line-height:1.45}
-  .filemeta button{background:none;border:none;color:var(--red);font-weight:700;cursor:pointer;font-size:10.5px;font-family:inherit;padding:0 0 0 4px}
+  .vhead{display:flex;gap:8px;margin-bottom:5px;padding-right:34px}
+  .vhead span{flex:1;font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  .vrow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+  .vrow input{flex:1}
+  .vdel{flex:0 0 26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer;font-size:13px;line-height:1;font-family:inherit}
+  .vdel:hover{color:var(--red);border-color:var(--red)}
+  .addvar{background:transparent;border:1px dashed var(--line);color:var(--soft);border-radius:8px;padding:8px;width:100%;font-size:11.5px;cursor:pointer;font-weight:700;font-family:inherit;margin-top:2px}
+  .addvar:hover{border-color:var(--muted);color:#fff}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chips button{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+  .chips button.on{background:var(--red);border-color:var(--red);color:#fff}
+  .row2{display:flex;gap:10px;align-items:end;margin-top:11px}
+  .row2 .field{flex:1}
 
   .out{margin-top:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
   .out .hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
   .out .hd .bar{width:13px;height:13px;border-radius:4px}
   .out .hd h2{font-size:11.5px;margin:0;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
   .out .hd .spacer{flex:1}
-  .copyall{border:none;border-radius:7px;background:var(--panel2);color:var(--soft);border:1px solid var(--line);font-weight:700;font-size:10.5px;padding:5px 10px;cursor:pointer;font-family:inherit}
+  .copyall{border-radius:7px;background:var(--panel2);color:var(--soft);border:1px solid var(--line);font-weight:700;font-size:10.5px;padding:5px 10px;cursor:pointer;font-family:inherit}
   .copyall:hover{border-color:var(--muted);color:#fff}
   .box{display:flex;gap:8px;align-items:stretch;margin-bottom:7px}
   .box:last-child{margin-bottom:0}
@@ -78,6 +86,9 @@
   button.copy.blue{background:var(--blue)}
   button.copy:hover{filter:brightness(1.1)}
   button.copy.ok{background:#1f8f3a}
+  .mktask{width:100%;border:none;border-radius:9px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;padding:11px;cursor:pointer;font-family:inherit;margin-top:9px}
+  .mktask:hover{filter:brightness(1.1)}
+  .mktask:disabled{opacity:.55;cursor:default}
   .foot{margin-top:14px;font-size:10.5px;color:var(--muted);line-height:1.55}
   .foot b{color:var(--soft);font-weight:700}
   .reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:7px 11px;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit}
@@ -86,7 +97,7 @@
 </head>
 <body>
 <header><div class="dot"></div><h1>ONEST Filename Generator</h1></header>
-<div class="sub">Drop your finished files in (or set a count) and it names them all — ID, variant and ratio filled automatically. The same ID leads the ClickUp task, so the Drive agent can file and link them.</div>
+<div class="sub">Set the creative once, add a row per variation (what actually differs), and it names every file and opens the ClickUp task — all under one ID.</div>
 
 <div class="seg" id="seg">
   <button data-type="video" class="active">Video</button>
@@ -106,17 +117,21 @@
   <div class="field"><label>Product</label><select id="product"></select></div>
   <div class="field"><label>Source</label><select id="source"></select></div>
   <div class="field full"><label>Concept / angle</label><input id="concept" placeholder="Stubborn Weight Stress" autocomplete="off"></div>
-  <div class="field full" id="f-talent"><label>Talent / actor</label><input id="talent" placeholder="Kath" autocomplete="off"></div>
-  <div class="field full" id="f-hook"><label>Hook (describe it)</label><input id="hook" placeholder="No one tells women this" autocomplete="off"></div>
+</div>
 
-  <div class="divider"><span>Output</span><div class="ln"></div></div>
-  <div class="field"><label>How many?</label><input id="count" type="number" min="1" value="1" autocomplete="off"></div>
-  <div class="field"><label>File type</label><select id="ext"></select></div>
-  <div class="drop" id="drop">
-    <b>Drop your export files here</b><br>or click to select — count &amp; ratio fill themselves
-  </div>
-  <div class="filemeta is-hidden" id="fileMeta"></div>
-  <input type="file" id="fileInput" multiple style="display:none">
+<div class="divider"><span>Variations</span><div class="ln"></div></div>
+<div class="vhead"><span id="vl1">Actor</span><span id="vl2">Hook</span></div>
+<div id="variations"></div>
+<button class="addvar" id="addVar">+ Add variation</button>
+
+<div class="row2">
+  <div class="field"><label>Ratios delivered</label><div class="chips" id="ratios">
+    <button data-r="9x16" class="on" type="button">9x16</button>
+    <button data-r="4x5" type="button">4x5</button>
+    <button data-r="1x1" type="button">1x1</button>
+    <button data-r="16x9" type="button">16x9</button>
+  </div></div>
+  <div class="field" style="flex:0 0 120px"><label>File type</label><select id="ext"></select></div>
 </div>
 
 <div class="out">
@@ -127,17 +142,20 @@
 <div class="out">
   <div class="hd"><span class="bar" style="background:var(--blue)"></span><h2>ClickUp task name</h2></div>
   <div class="box"><div class="val mono" id="outTask">&nbsp;</div><button class="copy blue" data-task="1">Copy</button></div>
+  <button class="mktask" id="createTask">Create the ClickUp task</button>
+  <div class="hint" id="taskStatus"></div>
 </div>
 
 <button class="reset" id="reset">Clear all</button>
 
 <div class="foot">
   <b>Float it on your desktop:</b> open this page in Chrome &rarr; menu (three dots) &rarr; Cast, save &amp; share &rarr; Install page as app.<br>
-  <b>No ratio shown?</b> Drop the actual files in and it reads each one. Otherwise the Drive agent adds the ratio when it files them.
+  <b>One row per variation</b> — change the actor, the hook, or both. The name says which is which, so search never breaks.
 </div>
 
 <script>
 const HELPER = "https://onest-creative-id.ryan-6df.workers.dev";
+const LISTS = { video: "901605225338", static: "900302632860" };
 
 const PRODUCTS = [
   ["HB","HyperBurn"],["HBE","HyperBurn Energy"],["HBNS","Non-Stim HyperBurn"],
@@ -150,93 +168,86 @@ const PRODUCTS = [
 const SOURCES = [["INT","INT (in-house)"],["EXT","EXT (external)"]];
 const EXTS_VIDEO  = [[".mp4","MP4"],[".mov","MOV"]];
 const EXTS_STATIC = [[".png","PNG"],[".jpg","JPG"]];
-// Standard ONEST ratios (label, width/height value) for nearest-match detection.
-const RATIOS = [["9x16",9/16],["4x5",4/5],["1x1",1],["16x9",16/9]];
 
 let currentType = 'video';
-let filesData = [];   // [{name,w,h,ratio,ext}] when files are dropped
 
 function fillSelect(id, rows, value){
-  const el = document.getElementById(id);
-  el.innerHTML = '';
+  const el=document.getElementById(id); el.innerHTML='';
   rows.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; el.appendChild(o); });
-  if (value!=null) el.value = value;
+  if(value!=null) el.value=value;
 }
 function fillProduct(){
-  const el = document.getElementById('product');
-  el.innerHTML = '<option value="" disabled selected>Select product</option>';
+  const el=document.getElementById('product');
+  el.innerHTML='<option value="" disabled selected>Select product</option>';
   PRODUCTS.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; el.appendChild(o); });
 }
-
 function kebab(s){
-  return (s||'').trim()
-    .replace(/[^A-Za-z0-9\s-]/g,'')
-    .split(/[\s-]+/).filter(Boolean)
-    .map(w => w.charAt(0).toUpperCase()+w.slice(1))
-    .join('-');
+  return (s||'').trim().replace(/[^A-Za-z0-9\s-]/g,'').split(/[\s-]+/).filter(Boolean)
+    .map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join('-');
 }
 function idClean(s){ return (s||'').trim().replace(/[^A-Za-z0-9-]/g,''); }
-function vlabel(n){ return 'V'+String(n).padStart(2,'0'); }
-function extOf(file){ const m=(file.name||'').match(/\.[A-Za-z0-9]+$/); return m ? m[0].toLowerCase() : ''; }
-function ratioFromDims(w,h){
-  if(!w||!h) return '';
-  const r = w/h; let best='', bestD=Infinity;
-  for(const [label,val] of RATIOS){ const d=Math.abs(r-val); if(d<bestD){ bestD=d; best=label; } }
-  return best;
-}
-function readDims(file){
-  return new Promise((resolve)=>{
-    const url = URL.createObjectURL(file);
-    const isVideo = (file.type||'').startsWith('video') || /\.(mp4|mov|webm|m4v)$/i.test(file.name);
-    const done = (w,h)=>{ resolve({w,h,ext:extOf(file)}); URL.revokeObjectURL(url); };
-    if(isVideo){
-      const v=document.createElement('video'); v.preload='metadata';
-      v.onloadedmetadata=()=>done(v.videoWidth,v.videoHeight); v.onerror=()=>done(0,0); v.src=url;
-    } else {
-      const img=new Image();
-      img.onload=()=>done(img.naturalWidth,img.naturalHeight); img.onerror=()=>done(0,0); img.src=url;
-    }
-  });
-}
-
 function val(id){ return document.getElementById(id).value || ''; }
 
-function composeName(variant, ratio, ext){
-  const id=idClean(val('id'));
-  if(!id) return '';
-  const product=val('product');
-  const concept=kebab(val('concept'));
-  if(currentType==='static'){
-    return [id,product,concept,'STATIC',variant,ratio].filter(Boolean).join('_')+ext;
-  }
-  const talent=kebab(val('talent'));
-  const hook=kebab(val('hook'));
-  const hookPart = hook ? 'HOOK-'+hook : '';
-  const source=val('source');
-  return [id,product,concept,variant,talent,hookPart,ratio,source].filter(Boolean).join('_')+ext;
+// ---- variation rows ----
+function addVariation(f1, f2){
+  const wrap=document.getElementById('variations');
+  const row=document.createElement('div'); row.className='vrow';
+  const i1=document.createElement('input'); i1.className='vf1'; i1.value=f1||''; i1.autocomplete='off';
+  const i2=document.createElement('input'); i2.className='vf2'; i2.value=f2||''; i2.autocomplete='off';
+  const del=document.createElement('button'); del.className='vdel'; del.textContent='✕'; del.type='button';
+  del.addEventListener('click', ()=>{ row.remove(); syncDelVisibility(); rebuildOutputs(); });
+  i1.addEventListener('input', rebuildOutputs); i2.addEventListener('input', rebuildOutputs);
+  row.appendChild(i1); row.appendChild(i2); row.appendChild(del);
+  wrap.appendChild(row);
+  applyPlaceholders(); syncDelVisibility();
+}
+function applyPlaceholders(){
+  const p1 = currentType==='static' ? 'Belly Fat Gone' : 'Kath';
+  const p2 = currentType==='static' ? 'Visual Metaphor' : 'No one tells women this';
+  document.querySelectorAll('.vf1').forEach(i=> i.placeholder=p1);
+  document.querySelectorAll('.vf2').forEach(i=> i.placeholder=p2);
+}
+function syncDelVisibility(){
+  const rows=document.querySelectorAll('#variations .vrow');
+  rows.forEach(r=> r.querySelector('.vdel').style.visibility = rows.length>1 ? 'visible':'hidden');
+}
+function collectVariations(){
+  return [...document.querySelectorAll('#variations .vrow')].map(r=>({
+    f1: r.querySelector('.vf1').value, f2: r.querySelector('.vf2').value
+  }));
+}
+function selectedRatios(){
+  return [...document.querySelectorAll('#ratios button.on')].map(b=> b.dataset.r);
 }
 
+function composeName(v, ratio){
+  const id=idClean(val('id')); if(!id) return '';
+  const product=val('product'); const concept=kebab(val('concept'));
+  const ext=val('ext')||(currentType==='static'?'.png':'.mp4');
+  if(currentType==='static'){
+    const headline=kebab(v.f1), angle=kebab(v.f2);
+    return [id,product,concept,'STATIC',headline,angle,ratio].filter(Boolean).join('_')+ext;
+  }
+  const actor=kebab(v.f1), hook=kebab(v.f2);
+  const hookPart = hook ? 'HOOK-'+hook : '';
+  const source=val('source');
+  return [id,product,concept,actor,hookPart,ratio,source].filter(Boolean).join('_')+ext;
+}
 function currentNames(){
   if(!idClean(val('id'))) return [];
-  if(filesData.length>0){
-    return filesData.map((f,i)=> composeName(vlabel(i+1), f.ratio, f.ext));
-  }
-  let c = parseInt(val('count')||'1',10); if(!c||c<1) c=1;
-  const ext = val('ext') || (currentType==='static' ? '.png' : '.mp4');
-  const out=[];
-  for(let i=1;i<=c;i++) out.push(composeName(vlabel(i), '', ext));
+  const vars=collectVariations();
+  const rs=selectedRatios(); const ratios = rs.length ? rs : [''];
+  const seen=new Set(); const out=[];
+  vars.forEach(v=> ratios.forEach(r=>{ const n=composeName(v,r); if(n && !seen.has(n)){ seen.add(n); out.push(n); } }));
   return out;
 }
 
 let lastNames=[];
 function rebuildOutputs(){
-  const names = currentNames();
-  lastNames = names;
-  const list = document.getElementById('fileList');
-  list.innerHTML='';
+  const names=currentNames(); lastNames=names;
+  const list=document.getElementById('fileList'); list.innerHTML='';
   if(names.length===0){
-    const box=document.createElement('div'); box.className='box';
-    box.innerHTML='<div class="val mono">&mdash;</div>'; list.appendChild(box);
+    const box=document.createElement('div'); box.className='box'; box.innerHTML='<div class="val mono">&mdash;</div>'; list.appendChild(box);
   } else {
     names.forEach(nm=>{
       const row=document.createElement('div'); row.className='box';
@@ -247,44 +258,18 @@ function rebuildOutputs(){
   }
   document.getElementById('fileHd').textContent = names.length>1 ? ('Filenames ('+names.length+')') : 'Filename';
   document.getElementById('copyAll').classList.toggle('is-hidden', names.length<2);
-  const id=idClean(val('id')); const concept=kebab(val('concept'));
+  const id=idClean(val('id')), concept=kebab(val('concept'));
   document.getElementById('outTask').textContent = [id,concept].filter(Boolean).join('_') || '—';
 }
 
 function setType(type){
-  currentType = type;
+  currentType=type;
   document.querySelectorAll('#seg button').forEach(b=> b.classList.toggle('active', b.dataset.type===type));
   const isStatic = type==='static';
-  document.getElementById('f-talent').classList.toggle('is-hidden', isStatic);
-  document.getElementById('f-hook').classList.toggle('is-hidden', isStatic);
+  document.getElementById('vl1').textContent = isStatic ? 'Headline' : 'Actor';
+  document.getElementById('vl2').textContent = isStatic ? 'Angle' : 'Hook';
   if(isStatic) fillSelect('ext', EXTS_STATIC, '.png'); else fillSelect('ext', EXTS_VIDEO, '.mp4');
-  rebuildOutputs();
-}
-
-async function onFiles(fileList){
-  const arr = Array.from(fileList||[]);
-  if(arr.length===0) return;
-  const firstImg = /\.(png|jpe?g|webp|gif)$/i.test(arr[0].name) || (arr[0].type||'').startsWith('image');
-  setType(firstImg ? 'static' : 'video');
-  filesData = await Promise.all(arr.map(async f=>{
-    const d = await readDims(f);
-    return { name:f.name, w:d.w, h:d.h, ratio:ratioFromDims(d.w,d.h), ext:(d.ext||(firstImg?'.png':'.mp4')) };
-  }));
-  const count=document.getElementById('count');
-  count.value = filesData.length; count.disabled = true;
-  const meta=document.getElementById('fileMeta');
-  const ratios = filesData.map(f=> f.ratio || '?').join(', ');
-  meta.innerHTML = filesData.length+' file(s) — ratios: <b>'+ratios+'</b> <button id="clearFiles">clear ✕</button>';
-  meta.classList.remove('is-hidden');
-  document.getElementById('clearFiles').addEventListener('click', clearFiles);
-  rebuildOutputs();
-}
-function clearFiles(){
-  filesData=[];
-  const count=document.getElementById('count'); count.disabled=false;
-  document.getElementById('fileMeta').classList.add('is-hidden');
-  document.getElementById('fileInput').value='';
-  rebuildOutputs();
+  applyPlaceholders(); rebuildOutputs();
 }
 
 async function copyText(text, btn){
@@ -302,58 +287,65 @@ async function peekId(){
     hint.innerHTML='Next free ID is <b>'+j.next+'</b>. Click <b>Get ID</b> to claim it for this task.';
   }catch(e){
     document.getElementById('id').placeholder='e.g. 100';
-    hint.classList.add('warn');
-    hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>.";
+    hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>.";
   }
 }
 async function claimId(){
-  const btn=document.getElementById('getid'); const hint=document.getElementById('idhint');
+  const btn=document.getElementById('getid'), hint=document.getElementById('idhint');
   btn.disabled=true; const label=btn.textContent; btn.textContent='…';
   try{
     const r=await fetch(HELPER+'/next',{cache:'no-store'}); const j=await r.json();
-    document.getElementById('id').value=j.id;
-    hint.classList.remove('warn');
+    document.getElementById('id').value=j.id; hint.classList.remove('warn');
     hint.innerHTML='Claimed ID <b>'+j.id+'</b> for this task — it now leads every filename below.';
     rebuildOutputs();
+  }catch(e){ hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>."; }
+  finally{ btn.disabled=false; btn.textContent=label; }
+}
+
+async function createTask(){
+  const id=idClean(val('id')), concept=kebab(val('concept'));
+  const name=[id,concept].filter(Boolean).join('_');
+  const status=document.getElementById('taskStatus');
+  if(!id || !concept){ status.className='hint warn'; status.textContent='Add an ID and a concept first.'; return; }
+  const btn=document.getElementById('createTask'); btn.disabled=true; const lbl=btn.textContent; btn.textContent='Creating…';
+  try{
+    const r=await fetch(HELPER+'/create-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({listId:LISTS[currentType], name})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||'failed');
+    status.className='hint'; status.innerHTML='✓ Created on the '+(currentType==='static'?'Graphic':'Video')+' board: <a href="'+j.url+'" target="_blank" rel="noopener">'+j.name+'</a>';
+    btn.textContent='Task created ✓';
   }catch(e){
-    hint.classList.add('warn');
-    hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>.";
-  }finally{ btn.disabled=false; btn.textContent=label; }
+    status.className='hint warn'; status.textContent='Could not create task: '+(e.message||e);
+    btn.disabled=false; btn.textContent=lbl;
+  }
 }
 
 // init
 fillProduct();
 fillSelect('source', SOURCES, 'INT');
 fillSelect('ext', EXTS_VIDEO, '.mp4');
+addVariation();
 peekId();
 rebuildOutputs();
 
 document.querySelectorAll('#seg button').forEach(b=> b.addEventListener('click', ()=> setType(b.dataset.type)));
 document.getElementById('getid').addEventListener('click', claimId);
-document.querySelectorAll('#id,#product,#source,#concept,#talent,#hook,#count,#ext').forEach(el=>{
-  el.addEventListener('input', rebuildOutputs);
-  el.addEventListener('change', rebuildOutputs);
-});
-document.getElementById('fileList').addEventListener('click', e=>{
-  const b=e.target.closest('button.copy'); if(b) copyText(b.dataset.copy, b);
-});
+document.getElementById('addVar').addEventListener('click', ()=>{ addVariation(); rebuildOutputs(); });
+document.querySelectorAll('#id,#product,#source,#concept,#ext').forEach(el=>{ el.addEventListener('input', rebuildOutputs); el.addEventListener('change', rebuildOutputs); });
+document.querySelectorAll('#ratios button').forEach(b=> b.addEventListener('click', ()=>{ b.classList.toggle('on'); rebuildOutputs(); }));
+document.getElementById('fileList').addEventListener('click', e=>{ const b=e.target.closest('button.copy'); if(b) copyText(b.dataset.copy,b); });
 document.getElementById('copyAll').addEventListener('click', e=> copyText(lastNames.join('\n'), e.target));
 document.querySelector('[data-task]').addEventListener('click', e=> copyText(document.getElementById('outTask').textContent, e.target));
-
-const drop=document.getElementById('drop'); const fileInput=document.getElementById('fileInput');
-drop.addEventListener('click', ()=> fileInput.click());
-fileInput.addEventListener('change', ()=> onFiles(fileInput.files));
-['dragenter','dragover'].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add('drag'); }));
-['dragleave','drop'].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove('drag'); }));
-drop.addEventListener('drop', e=> onFiles(e.dataTransfer.files));
-
+document.getElementById('createTask').addEventListener('click', createTask);
 document.getElementById('reset').addEventListener('click', ()=>{
-  clearFiles();
-  ['id','concept','talent','hook'].forEach(id=> document.getElementById(id).value='');
+  ['id','concept'].forEach(id=> document.getElementById(id).value='');
   document.getElementById('product').selectedIndex=0;
   document.getElementById('source').value='INT';
-  document.getElementById('count').value='1';
+  document.getElementById('variations').innerHTML=''; addVariation();
+  document.querySelectorAll('#ratios button').forEach(b=> b.classList.toggle('on', b.dataset.r==='9x16'));
   document.getElementById('ext').value = currentType==='static' ? '.png' : '.mp4';
+  document.getElementById('taskStatus').textContent='';
+  const ct=document.getElementById('createTask'); ct.disabled=false; ct.textContent='Create the ClickUp task';
   rebuildOutputs();
 });
 </script>
