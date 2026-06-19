@@ -1,6 +1,6 @@
 // ONEST creative-ID service.
 // One running number per creative, shared across the whole team.
-// Backed by a single-row D1 table so increments are atomic — no two
+// Backed by a single-row D1 table so increments are atomic. No two
 // editors can ever claim the same ID, even clicking at the same instant.
 
 const HEADERS = {
@@ -43,35 +43,47 @@ export default {
         return Response.json({ current, next: current + 1 }, { headers: HEADERS });
       }
 
-      if (url.pathname === "/create-task" && request.method === "POST") {
-        // Create the ClickUp task for a creative. Locked to the two ad boards
-        // and to ID-prefixed names so the open endpoint can't be abused freely.
-        const ALLOWED = new Set([
-          "901605225338", // VIDEO AD BOARD
-          "900302632860", // GRAPHIC AD BOARD
-        ]);
-        const body = await request.json().catch(() => ({}));
-        const listId = String(body.listId || "");
-        const name = String(body.name || "").trim();
-        if (!ALLOWED.has(listId)) {
-          return Response.json({ error: "list not allowed" }, { status: 400, headers: HEADERS });
+      if (url.pathname === "/angles") {
+        // Shared, controlled angle vocabulary so the whole team picks from one list
+        // (kills "cortisol belly" vs "cortisol weight" drift). The angle drives the
+        // Drive agent's Edited/<Angle>/ folder, so a single source of truth matters.
+        // Lazily ensure the table exists via the runtime binding (the D1 CLI can't reach
+        // this DB from local auth, but the binding can, same path the counter uses).
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS angles (name TEXT PRIMARY KEY)").run();
+        const seeded = await env.DB.prepare("SELECT COUNT(*) AS n FROM angles").first();
+        if (!seeded || seeded.n === 0) {
+          await env.DB.prepare("INSERT OR IGNORE INTO angles (name) VALUES ('Dad Bod')").run();
         }
-        if (!/^\d/.test(name)) {
-          return Response.json({ error: "name must start with the creative ID" }, { status: 400, headers: HEADERS });
+        if (request.method === "GET") {
+          const { results } = await env.DB
+            .prepare("SELECT name FROM angles ORDER BY name COLLATE NOCASE")
+            .all();
+          return Response.json(
+            { angles: (results || []).map((r) => r.name) },
+            { headers: HEADERS },
+          );
         }
-        if (!env.CLICKUP_TOKEN) {
-          return Response.json({ error: "server not configured" }, { status: 500, headers: HEADERS });
+        if (request.method === "POST") {
+          const body = await request.json().catch(() => ({}));
+          // Normalise exactly like the Drive agent's canonicalAngle so the list, the
+          // filenames, and the folders all agree (dad-bod / DAD BOD -> "Dad Bod").
+          const name = String(body.name || "")
+            .replace(/[^A-Za-z0-9 '&/+-]/g, "")
+            .replace(/[-_]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase()
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+          if (!name || name.length > 60) {
+            return Response.json({ error: "invalid angle name" }, { status: 400, headers: HEADERS });
+          }
+          await env.DB
+            .prepare("INSERT OR IGNORE INTO angles (name) VALUES (?)")
+            .bind(name)
+            .run();
+          return Response.json({ name }, { headers: HEADERS });
         }
-        const cu = await fetch("https://api.clickup.com/api/v2/list/" + listId + "/task", {
-          method: "POST",
-          headers: { "Authorization": env.CLICKUP_TOKEN, "Content-Type": "application/json" },
-          body: JSON.stringify({ name }),
-        });
-        const j = await cu.json().catch(() => ({}));
-        if (!cu.ok) {
-          return Response.json({ error: "clickup error", detail: j }, { status: 502, headers: HEADERS });
-        }
-        return Response.json({ id: j.id, url: j.url, name: j.name }, { headers: HEADERS });
+        return Response.json({ error: "use GET or POST" }, { status: 405, headers: HEADERS });
       }
 
       if (url.pathname === "/health") {
@@ -86,7 +98,7 @@ export default {
         url.pathname === "/filenamegenerator" ||
         url.pathname === "/filenamegenerator/"
       ) {
-        // Serve the generator (proxy the GitHub Pages site — single source of truth,
+        // Serve the generator (proxy the GitHub Pages site, single source of truth,
         // no duplicated HTML). Lives at the root of generator.onestos.org.
         const page = await fetch("https://ryanspiteri.github.io/onest-filename-generator/", {
           cf: { cacheTtl: 300 },

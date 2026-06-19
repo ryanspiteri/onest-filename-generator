@@ -46,6 +46,8 @@
   input::placeholder{color:#566}
   select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
     background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .anglerow{display:flex;gap:8px}
+  .anglerow select{flex:1}
 
   .idblock{margin-bottom:11px}
   .idrow{display:flex;gap:8px}
@@ -65,8 +67,10 @@
 
   .vhead{display:flex;gap:8px;margin-bottom:5px;padding-right:34px}
   .vhead span{flex:1;font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  .vhead.single #vl2{display:none}
   .vrow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
   .vrow input{flex:1}
+  #variations.single .vf2{display:none}
   .vdel{flex:0 0 26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer;font-size:13px;line-height:1;font-family:inherit}
   .vdel:hover{color:var(--red);border-color:var(--red)}
   .addvar{background:transparent;border:1px dashed var(--line);color:var(--soft);border-radius:8px;padding:8px;width:100%;font-size:11.5px;cursor:pointer;font-weight:700;font-family:inherit;margin-top:2px}
@@ -89,12 +93,8 @@
   .box:last-child{margin-bottom:0}
   .val{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;color:var(--green);word-break:break-all;line-height:1.45;min-height:38px}
   button.copy{border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;padding:0 14px;cursor:pointer;white-space:nowrap;font-family:inherit;background:var(--red)}
-  button.copy.blue{background:var(--blue)}
   button.copy:hover{filter:brightness(1.1)}
   button.copy.ok{background:#1f8f3a}
-  .mktask{width:100%;border:none;border-radius:9px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;padding:11px;cursor:pointer;font-family:inherit;margin-top:9px}
-  .mktask:hover{filter:brightness(1.1)}
-  .mktask:disabled{opacity:.55;cursor:default}
   .foot{margin-top:14px;font-size:10.5px;color:var(--muted);line-height:1.55}
   .foot b{color:var(--soft);font-weight:700}
   .reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:7px 11px;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit}
@@ -103,7 +103,7 @@
 </head>
 <body>
 <header><div class="dot"></div><h1>ONEST Filename Generator</h1></header>
-<div class="sub">Set the creative once, add a row per variation (what actually differs), and it names every file and opens the ClickUp task — all under one ID.</div>
+<div class="sub">Set the creative once, add a row per variation (what actually differs), and it names every file under one ID. Pick the angle from the list so the data stays clean.</div>
 
 <div class="seg" id="seg">
   <button data-type="video" class="active">Video</button>
@@ -116,14 +116,17 @@
     <input id="id" placeholder="e.g. 100" autocomplete="off">
     <button class="getid" id="getid">Get ID</button>
   </div>
-  <div class="hint" id="idhint">One number for the whole task — leads every file and the ClickUp card.</div>
+  <div class="hint" id="idhint">One number for the whole task. It leads every file.</div>
 </div>
 
 <div class="grid">
   <div class="field"><label>Product</label><select id="product"></select></div>
   <div class="field"><label>Source</label><select id="source"></select></div>
-  <div class="field full"><label>Concept / angle</label><input id="concept" placeholder="Stubborn Weight Stress" autocomplete="off"></div>
-  <div class="field full"><label>Campaign (optional)</label><input id="campaign" placeholder="e.g. EOFY Sale — leave blank for a normal product creative" autocomplete="off"></div>
+  <div class="field full"><label>Script title</label><input id="scriptTitle" placeholder="e.g. Summer Shred Challenge (the unique name)" autocomplete="off"></div>
+  <div class="field full"><label>Angle</label>
+    <div class="anglerow"><select id="angle"></select><button type="button" class="getid" id="addAngle">+ Add</button></div>
+  </div>
+  <div class="field full"><label>Campaign (optional)</label><input id="campaign" placeholder="e.g. EOFY Sale (leave blank for a normal product creative)" autocomplete="off"></div>
 </div>
 
 <div class="divider"><span>Variations</span><div class="ln"></div></div>
@@ -138,7 +141,6 @@
     <button data-r="1x1" type="button">1x1</button>
     <button data-r="16x9" type="button">16x9</button>
   </div></div>
-  <div class="field" style="flex:0 0 120px"><label>File type</label><select id="ext"></select></div>
 </div>
 
 <div class="out">
@@ -146,26 +148,18 @@
   <div id="fileList"></div>
 </div>
 
-<div class="out">
-  <div class="hd"><span class="bar" style="background:var(--blue)"></span><h2>ClickUp task name</h2></div>
-  <div class="box"><div class="val mono" id="outTask">&nbsp;</div><button class="copy blue" data-task="1">Copy</button></div>
-  <button class="mktask" id="createTask">Create the ClickUp task</button>
-  <div class="hint" id="taskStatus"></div>
-</div>
-
 <button class="reset" id="reset">Clear all</button>
 
 <div class="foot">
   <b>Float it on your desktop:</b> open this page in Chrome &rarr; menu (three dots) &rarr; Cast, save &amp; share &rarr; Install page as app.<br>
-  <b>One row per variation</b> — change the actor, the hook, or both. The name says which is which, so search never breaks.
+  <b>One row per variation</b>: change the actor, the hook, or both. The name says which is which, so search never breaks.
 </div>
 
 <script>
 // Served from generator.onestos.org the helper endpoints are same-origin, so call
-// them with a relative path — robust even on networks that block *.workers.dev. On
+// them with a relative path, robust even on networks that block *.workers.dev. On
 // the GitHub Pages copy, fall back to the absolute Worker URL.
 const HELPER = location.hostname.endsWith("onestos.org") ? "" : "https://onest-creative-id.ryan-6df.workers.dev";
-const LISTS = { video: "901605225338", static: "900302632860" };
 
 const PRODUCTS = [
   ["HB","HyperBurn"],["HBE","HyperBurn Energy"],["HBNS","Non-Stim HyperBurn"],
@@ -176,10 +170,9 @@ const PRODUCTS = [
   ["SG","SuperGreens"],["STK","Stacks"],["AX","Astaxanthin"]
 ];
 const SOURCES = [["INT","INT (in-house)"],["EXT","EXT (external)"]];
-const EXTS_VIDEO  = [[".mp4","MP4"],[".mov","MOV"]];
-const EXTS_STATIC = [[".png","PNG"],[".jpg","JPG"]];
 
 let currentType = 'video';
+let ANGLES = [];
 
 function fillSelect(id, rows, value){
   const el=document.getElementById(id); el.innerHTML='';
@@ -198,6 +191,31 @@ function kebab(s){
 function idClean(s){ return (s||'').trim().replace(/[^A-Za-z0-9-]/g,''); }
 function val(id){ return document.getElementById(id).value || ''; }
 
+// ---- angle dropdown (shared list, backed by the Worker so the whole team stays in sync) ----
+function renderAngles(selected){
+  const sel=document.getElementById('angle');
+  sel.innerHTML='<option value="" disabled selected>Select angle</option>';
+  ANGLES.forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o); });
+  if(selected) sel.value=selected;
+}
+async function loadAngles(selected){
+  try{
+    const r=await fetch(HELPER+'/angles',{cache:'no-store'}); const j=await r.json();
+    if(Array.isArray(j.angles)) ANGLES=j.angles;
+  }catch(e){ /* keep whatever we have; the team can still type via + Add */ }
+  renderAngles(selected); rebuildOutputs();
+}
+async function addAngle(){
+  const name=(window.prompt('New angle (e.g. Dad Bod)')||'').trim();
+  if(!name) return;
+  try{
+    const r=await fetch(HELPER+'/angles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||'failed');
+    await loadAngles(j.name||name);
+  }catch(e){ window.alert('Could not add angle: '+(e.message||e)); }
+}
+
 // ---- variation rows ----
 function addVariation(f1, f2){
   const wrap=document.getElementById('variations');
@@ -213,7 +231,7 @@ function addVariation(f1, f2){
 }
 function applyPlaceholders(){
   const p1 = currentType==='static' ? 'Belly Fat Gone' : 'Kath';
-  const p2 = currentType==='static' ? 'Visual Metaphor' : 'No one tells women this';
+  const p2 = currentType==='static' ? '' : 'No one tells women this';
   document.querySelectorAll('.vf1').forEach(i=> i.placeholder=p1);
   document.querySelectorAll('.vf2').forEach(i=> i.placeholder=p2);
 }
@@ -232,17 +250,18 @@ function selectedRatios(){
 
 function composeName(v, ratio){
   const id=idClean(val('id')); if(!id) return '';
-  const product=val('product'); const concept=kebab(val('concept'));
+  const product=val('product');
   const cmp = val('campaign') ? 'CMP-'+kebab(val('campaign')) : '';
-  const ext=val('ext')||(currentType==='static'?'.png':'.mp4');
+  const title=kebab(val('scriptTitle'));
+  const angle=kebab(val('angle'));
   if(currentType==='static'){
-    const headline=kebab(v.f1), angle=kebab(v.f2);
-    return [id,product,cmp,concept,'STATIC',headline,angle,ratio].filter(Boolean).join('_')+ext;
+    const headline=kebab(v.f1);
+    return [id,product,cmp,title,angle,'STATIC',headline,ratio].filter(Boolean).join('_');
   }
   const actor=kebab(v.f1), hook=kebab(v.f2);
   const hookPart = hook ? 'HOOK-'+hook : '';
   const source=val('source');
-  return [id,product,cmp,concept,actor,hookPart,ratio,source].filter(Boolean).join('_')+ext;
+  return [id,product,cmp,title,angle,actor,hookPart,ratio,source].filter(Boolean).join('_');
 }
 function currentNames(){
   if(!idClean(val('id'))) return [];
@@ -269,8 +288,6 @@ function rebuildOutputs(){
   }
   document.getElementById('fileHd').textContent = names.length>1 ? ('Filenames ('+names.length+')') : 'Filename';
   document.getElementById('copyAll').classList.toggle('is-hidden', names.length<2);
-  const id=idClean(val('id')), concept=kebab(val('concept'));
-  document.getElementById('outTask').textContent = [id,concept].filter(Boolean).join('_') || '—';
 }
 
 function setType(type){
@@ -278,8 +295,9 @@ function setType(type){
   document.querySelectorAll('#seg button').forEach(b=> b.classList.toggle('active', b.dataset.type===type));
   const isStatic = type==='static';
   document.getElementById('vl1').textContent = isStatic ? 'Headline' : 'Actor';
-  document.getElementById('vl2').textContent = isStatic ? 'Angle' : 'Hook';
-  if(isStatic) fillSelect('ext', EXTS_STATIC, '.png'); else fillSelect('ext', EXTS_VIDEO, '.mp4');
+  document.getElementById('vl2').textContent = isStatic ? '' : 'Hook';
+  document.querySelector('.vhead').classList.toggle('single', isStatic);
+  document.getElementById('variations').classList.toggle('single', isStatic);
   applyPlaceholders(); rebuildOutputs();
 }
 
@@ -298,7 +316,7 @@ async function peekId(){
     hint.innerHTML='Next free ID is <b>'+j.next+'</b>. Click <b>Get ID</b> to claim it for this task.';
   }catch(e){
     document.getElementById('id').placeholder='e.g. 100';
-    hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>.";
+    hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service. <b>Type the next number manually</b>.";
   }
 }
 async function claimId(){
@@ -307,56 +325,35 @@ async function claimId(){
   try{
     const r=await fetch(HELPER+'/next',{method:'POST',cache:'no-store'}); const j=await r.json();
     document.getElementById('id').value=j.id; hint.classList.remove('warn');
-    hint.innerHTML='Claimed ID <b>'+j.id+'</b> for this task — it now leads every filename below.';
+    hint.innerHTML='Claimed ID <b>'+j.id+'</b> for this task. It now leads every filename below.';
     rebuildOutputs();
-  }catch(e){ hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service — <b>type the next number manually</b>."; }
+  }catch(e){ hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service. <b>Type the next number manually</b>."; }
   finally{ btn.disabled=false; btn.textContent=label; }
-}
-
-async function createTask(){
-  const id=idClean(val('id')), concept=kebab(val('concept'));
-  const name=[id,concept].filter(Boolean).join('_');
-  const status=document.getElementById('taskStatus');
-  if(!id || !concept){ status.className='hint warn'; status.textContent='Add an ID and a concept first.'; return; }
-  const btn=document.getElementById('createTask'); btn.disabled=true; const lbl=btn.textContent; btn.textContent='Creating…';
-  try{
-    const r=await fetch(HELPER+'/create-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({listId:LISTS[currentType], name})});
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||'failed');
-    status.className='hint'; status.innerHTML='✓ Created on the '+(currentType==='static'?'Graphic':'Video')+' board: <a href="'+j.url+'" target="_blank" rel="noopener">'+j.name+'</a>';
-    btn.textContent='Task created ✓';
-  }catch(e){
-    status.className='hint warn'; status.textContent='Could not create task: '+(e.message||e);
-    btn.disabled=false; btn.textContent=lbl;
-  }
 }
 
 // init
 fillProduct();
 fillSelect('source', SOURCES, 'INT');
-fillSelect('ext', EXTS_VIDEO, '.mp4');
 addVariation();
 peekId();
+loadAngles();
 rebuildOutputs();
 
 document.querySelectorAll('#seg button').forEach(b=> b.addEventListener('click', ()=> setType(b.dataset.type)));
 document.getElementById('getid').addEventListener('click', claimId);
+document.getElementById('addAngle').addEventListener('click', addAngle);
 document.getElementById('addVar').addEventListener('click', ()=>{ addVariation(); rebuildOutputs(); });
-document.querySelectorAll('#id,#product,#source,#concept,#ext').forEach(el=>{ el.addEventListener('input', rebuildOutputs); el.addEventListener('change', rebuildOutputs); });
+document.querySelectorAll('#id,#product,#source,#scriptTitle,#angle,#campaign').forEach(el=>{ el.addEventListener('input', rebuildOutputs); el.addEventListener('change', rebuildOutputs); });
 document.querySelectorAll('#ratios button').forEach(b=> b.addEventListener('click', ()=>{ b.classList.toggle('on'); rebuildOutputs(); }));
 document.getElementById('fileList').addEventListener('click', e=>{ const b=e.target.closest('button.copy'); if(b) copyText(b.dataset.copy,b); });
 document.getElementById('copyAll').addEventListener('click', e=> copyText(lastNames.join('\n'), e.target));
-document.querySelector('[data-task]').addEventListener('click', e=> copyText(document.getElementById('outTask').textContent, e.target));
-document.getElementById('createTask').addEventListener('click', createTask);
 document.getElementById('reset').addEventListener('click', ()=>{
-  ['id','concept'].forEach(id=> document.getElementById(id).value='');
+  ['id','scriptTitle','campaign'].forEach(id=> document.getElementById(id).value='');
   document.getElementById('product').selectedIndex=0;
+  document.getElementById('angle').selectedIndex=0;
   document.getElementById('source').value='INT';
   document.getElementById('variations').innerHTML=''; addVariation();
   document.querySelectorAll('#ratios button').forEach(b=> b.classList.toggle('on', b.dataset.r==='9x16'));
-  document.getElementById('ext').value = currentType==='static' ? '.png' : '.mp4';
-  document.getElementById('taskStatus').textContent='';
-  const ct=document.getElementById('createTask'); ct.disabled=false; ct.textContent='Create the ClickUp task';
   rebuildOutputs();
 });
 </script>

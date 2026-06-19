@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-06-18"
 
 # Keep the workers.dev URL alive — the generator calls it for /next, /peek and
-# /create-task. Adding routes would otherwise disable it.
+# /angles. Adding routes would otherwise disable it.
 workers_dev = true
 
 # Serve the generator on its own subdomain. A path on onestos.org gets shadowed by
@@ -15,10 +15,13 @@ routes = [
   { pattern = "generator.onestos.org", custom_domain = true }
 ]
 
-# Atomic creative-ID counter for the ONEST Filename Generator.
-# GET /next  -> claims the next ID (atomic increment), returns { "id": 59 }
-# GET /peek  -> { "current": 58, "next": 59 } without incrementing
+# Atomic creative-ID counter + shared angle vocabulary for the ONEST Filename Generator.
+# POST /next   -> claims the next ID (atomic increment), returns { "id": 59 }
+# GET  /peek   -> { "current": 58, "next": 59 } without incrementing
+# GET  /angles -> { "angles": ["Dad Bod", ...] } (shared dropdown list)
+# POST /angles -> adds a normalised angle, returns { "name": "Dad Bod" }
 # D1 serialises writes per database, so two editors never get the same number.
+# Tables: counter(id, val) + angles(name TEXT PRIMARY KEY).
 
 [[d1_databases]]
 binding = "DB"
