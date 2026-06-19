@@ -66,21 +66,20 @@
   .is-hidden{display:none !important}
 
   .vhead{display:flex;gap:8px;margin-bottom:5px;padding-right:34px}
-  .vhead span{flex:1;font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
-  .vhead.single #vl2{display:none}
+  .vhead .vnh{flex:0 0 26px}
+  .vhead .lbl{flex:1;font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:6px}
+  .vhead.single .lbl.type{display:none}
+  .vhead.single #addActor{display:none}
+  .addv{background:transparent;border:1px solid var(--line);color:var(--soft);border-radius:5px;padding:1px 7px;font-size:9px;cursor:pointer;font-weight:700;font-family:inherit;text-transform:none;letter-spacing:0}
+  .addv:hover{border-color:var(--muted);color:#fff}
   .vrow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
-  .vrow input{flex:1}
+  .vnum{flex:0 0 26px;text-align:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:var(--muted)}
+  .vrow input,.vrow select{flex:1}
   #variations.single .vf2{display:none}
   .vdel{flex:0 0 26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer;font-size:13px;line-height:1;font-family:inherit}
   .vdel:hover{color:var(--red);border-color:var(--red)}
   .addvar{background:transparent;border:1px dashed var(--line);color:var(--soft);border-radius:8px;padding:8px;width:100%;font-size:11.5px;cursor:pointer;font-weight:700;font-family:inherit;margin-top:2px}
   .addvar:hover{border-color:var(--muted);color:#fff}
-
-  .chips{display:flex;gap:7px;flex-wrap:wrap}
-  .chips button{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-  .chips button.on{background:var(--red);border-color:var(--red);color:#fff}
-  .row2{display:flex;gap:10px;align-items:end;margin-top:11px}
-  .row2 .field{flex:1}
 
   .out{margin-top:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
   .out .hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -103,7 +102,7 @@
 </head>
 <body>
 <header><div class="dot"></div><h1>ONEST Filename Generator</h1></header>
-<div class="sub">Set the creative once, add a row per variation (what actually differs), and it names every file under one ID. Pick the angle from the list so the data stays clean.</div>
+<div class="sub">Set the creative once, add a row per variation (what actually differs), and it names every file under one ID. Pick the angle and type from the lists so the data stays clean.</div>
 
 <div class="seg" id="seg">
   <button data-type="video" class="active">Video</button>
@@ -113,7 +112,7 @@
 <div class="idblock">
   <label>Creative ID</label>
   <div class="idrow">
-    <input id="id" placeholder="e.g. 100" autocomplete="off">
+    <input id="id" placeholder="e.g. 62" autocomplete="off">
     <button class="getid" id="getid">Get ID</button>
   </div>
   <div class="hint" id="idhint">One number for the whole task. It leads every file.</div>
@@ -130,29 +129,32 @@
 </div>
 
 <div class="divider"><span>Variations</span><div class="ln"></div></div>
-<div class="vhead"><span id="vl1">Actor</span><span id="vl2">Hook</span></div>
+<div class="vhead">
+  <span class="vnh"></span>
+  <span class="lbl"><span id="vl1">Actor</span> <button type="button" class="addv" id="addActor">+ add</button></span>
+  <span class="lbl type"><span id="vl2">Type</span> <button type="button" class="addv" id="addType">+ add</button></span>
+</div>
 <div id="variations"></div>
+<datalist id="actorlist"></datalist>
 <button class="addvar" id="addVar">+ Add variation</button>
 
-<div class="row2">
-  <div class="field"><label>Ratios delivered</label><div class="chips" id="ratios">
-    <button data-r="9x16" class="on" type="button">9x16</button>
-    <button data-r="4x5" type="button">4x5</button>
-    <button data-r="1x1" type="button">1x1</button>
-    <button data-r="16x9" type="button">16x9</button>
-  </div></div>
+<div class="grid" style="margin-top:11px">
+  <div class="field full"><label>Persona (optional)</label>
+    <div class="anglerow"><select id="persona"></select><button type="button" class="getid" id="addPersona">+ Add</button></div>
+  </div>
 </div>
 
 <div class="out">
   <div class="hd"><span class="bar" style="background:var(--red)"></span><h2 id="fileHd">Filename</h2><span class="spacer"></span><button class="copyall is-hidden" id="copyAll">Copy all</button></div>
   <div id="fileList"></div>
+  <div class="hint" style="margin-top:9px">Drop the export in <b>04_Content_Creative &rsaquo; _Inbox</b>. The organiser reads each file's size and adds the ratio (9x16, 1x1, 4x5) automatically, so the same name covers every ratio.</div>
 </div>
 
 <button class="reset" id="reset">Clear all</button>
 
 <div class="foot">
   <b>Float it on your desktop:</b> open this page in Chrome &rarr; menu (three dots) &rarr; Cast, save &amp; share &rarr; Install page as app.<br>
-  <b>One row per variation</b>: change the actor, the hook, or both. The name says which is which, so search never breaks.
+  <b>One row per variation</b>: change the actor, the type, or both. Each row is numbered, so search never breaks.
 </div>
 
 <script>
@@ -172,7 +174,8 @@ const PRODUCTS = [
 const SOURCES = [["INT","INT (in-house)"],["EXT","EXT (external)"]];
 
 let currentType = 'video';
-let ANGLES = [];
+let ANGLES = [], TYPES = [], PERSONAS = [], ACTORS = [];
+let lastActor = '';
 
 function fillSelect(id, rows, value){
   const el=document.getElementById(id); el.innerHTML='';
@@ -191,49 +194,87 @@ function kebab(s){
 function idClean(s){ return (s||'').trim().replace(/[^A-Za-z0-9-]/g,''); }
 function val(id){ return document.getElementById(id).value || ''; }
 
-// ---- angle dropdown (shared list, backed by the Worker so the whole team stays in sync) ----
-function renderAngles(selected){
-  const sel=document.getElementById('angle');
-  sel.innerHTML='<option value="" disabled selected>Select angle</option>';
-  ANGLES.forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o); });
-  if(selected) sel.value=selected;
-}
-async function loadAngles(selected){
+// ---- shared vocabularies (backed by the Worker so the whole team stays in sync) ----
+async function fetchVocab(path){
   try{
-    const r=await fetch(HELPER+'/angles',{cache:'no-store'}); const j=await r.json();
-    if(Array.isArray(j.angles)) ANGLES=j.angles;
-  }catch(e){ /* keep whatever we have; the team can still type via + Add */ }
-  renderAngles(selected); rebuildOutputs();
+    const r=await fetch(HELPER+path,{cache:'no-store'}); const j=await r.json();
+    return Array.isArray(j.items) ? j.items : (Array.isArray(j.angles) ? j.angles : []);
+  }catch(e){ return null; } // null = couldn't reach it; keep whatever we have
+}
+function renderAngles(selected){
+  const sel=document.getElementById('angle'); const prev = selected!=null ? selected : sel.value;
+  sel.innerHTML='<option value="" disabled '+(prev?'':'selected')+'>Select angle</option>';
+  ANGLES.forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o); });
+  if(prev) sel.value=prev;
+}
+function renderPersonas(selected){
+  const sel=document.getElementById('persona'); const prev = selected!=null ? selected : sel.value;
+  sel.innerHTML='<option value="">No persona</option>';
+  PERSONAS.forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o); });
+  if(prev) sel.value=prev;
+}
+function renderTypeSelects(){
+  document.querySelectorAll('#variations .vf2').forEach(sel=>{
+    const prev=sel.value;
+    sel.innerHTML='<option value="">Select type</option>';
+    TYPES.forEach(t=>{ const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o); });
+    if(prev) sel.value=prev;
+  });
+}
+function renderActors(){
+  const dl=document.getElementById('actorlist'); dl.innerHTML='';
+  ACTORS.forEach(a=>{ const o=document.createElement('option'); o.value=a; dl.appendChild(o); });
+}
+async function loadAngles(selected){ const v=await fetchVocab('/angles'); if(v) ANGLES=v; renderAngles(selected); rebuildOutputs(); }
+async function loadPersonas(){ const v=await fetchVocab('/personas'); if(v) PERSONAS=v; renderPersonas(); rebuildOutputs(); }
+async function loadTypes(){ const v=await fetchVocab('/types'); if(v) TYPES=v; renderTypeSelects(); rebuildOutputs(); }
+async function loadActors(){ const v=await fetchVocab('/actors'); if(v) ACTORS=v; renderActors(); }
+
+async function postVocab(path, name){
+  const r=await fetch(HELPER+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
+  const j=await r.json(); if(!r.ok) throw new Error(j.error||'failed'); return j.name||name;
 }
 async function addAngle(){
-  const name=(window.prompt('New angle (e.g. Dad Bod)')||'').trim();
-  if(!name) return;
-  try{
-    const r=await fetch(HELPER+'/angles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||'failed');
-    await loadAngles(j.name||name);
-  }catch(e){ window.alert('Could not add angle: '+(e.message||e)); }
+  const name=(window.prompt('Add an angle (e.g. Dad Bod)')||'').trim(); if(!name) return;
+  try{ const n=await postVocab('/angles', name); await loadAngles(n); }catch(e){ window.alert('Could not add angle: '+(e.message||e)); }
+}
+async function addType(){
+  const name=(window.prompt('Add a type (e.g. Green screen)')||'').trim(); if(!name) return;
+  try{ await postVocab('/types', name); await loadTypes(); }catch(e){ window.alert('Could not add type: '+(e.message||e)); }
+}
+async function addPersona(){
+  const name=(window.prompt('Add a persona (e.g. Busy Mum)')||'').trim(); if(!name) return;
+  try{ const n=await postVocab('/personas', name); await loadPersonas(); document.getElementById('persona').value=n; rebuildOutputs(); }catch(e){ window.alert('Could not add persona: '+(e.message||e)); }
+}
+async function addActor(){
+  // Pre-fill with the last actor you typed, so a one-off becomes permanent in one click.
+  const name=(window.prompt('Add an actor to the saved list', lastActor)||'').trim(); if(!name) return;
+  try{ await postVocab('/actors', name); await loadActors(); }catch(e){ window.alert('Could not add actor: '+(e.message||e)); }
 }
 
 // ---- variation rows ----
+function renumberVariations(){
+  document.querySelectorAll('#variations .vrow .vnum').forEach((el,i)=> el.textContent=String(i+1).padStart(2,'0'));
+}
 function addVariation(f1, f2){
   const wrap=document.getElementById('variations');
   const row=document.createElement('div'); row.className='vrow';
+  const num=document.createElement('span'); num.className='vnum';
   const i1=document.createElement('input'); i1.className='vf1'; i1.value=f1||''; i1.autocomplete='off';
-  const i2=document.createElement('input'); i2.className='vf2'; i2.value=f2||''; i2.autocomplete='off';
+  if(currentType!=='static') i1.setAttribute('list','actorlist');
+  i1.addEventListener('input', ()=>{ if(currentType!=='static') lastActor=i1.value; rebuildOutputs(); });
+  const i2=document.createElement('select'); i2.className='vf2';
+  i2.addEventListener('change', rebuildOutputs);
   const del=document.createElement('button'); del.className='vdel'; del.textContent='✕'; del.type='button';
-  del.addEventListener('click', ()=>{ row.remove(); syncDelVisibility(); rebuildOutputs(); });
-  i1.addEventListener('input', rebuildOutputs); i2.addEventListener('input', rebuildOutputs);
-  row.appendChild(i1); row.appendChild(i2); row.appendChild(del);
+  del.addEventListener('click', ()=>{ row.remove(); renumberVariations(); syncDelVisibility(); rebuildOutputs(); });
+  row.appendChild(num); row.appendChild(i1); row.appendChild(i2); row.appendChild(del);
   wrap.appendChild(row);
-  applyPlaceholders(); syncDelVisibility();
+  renderTypeSelects(); if(f2) i2.value=f2;
+  applyPlaceholders(); renumberVariations(); syncDelVisibility();
 }
 function applyPlaceholders(){
-  const p1 = currentType==='static' ? 'Belly Fat Gone' : 'Kath';
-  const p2 = currentType==='static' ? '' : 'No one tells women this';
+  const p1 = currentType==='static' ? 'Belly Fat Gone' : 'Pick or type a name';
   document.querySelectorAll('.vf1').forEach(i=> i.placeholder=p1);
-  document.querySelectorAll('.vf2').forEach(i=> i.placeholder=p2);
 }
 function syncDelVisibility(){
   const rows=document.querySelectorAll('#variations .vrow');
@@ -244,31 +285,28 @@ function collectVariations(){
     f1: r.querySelector('.vf1').value, f2: r.querySelector('.vf2').value
   }));
 }
-function selectedRatios(){
-  return [...document.querySelectorAll('#ratios button.on')].map(b=> b.dataset.r);
-}
 
-function composeName(v, ratio){
+function composeName(v, n){
   const id=idClean(val('id')); if(!id) return '';
   const product=val('product');
   const cmp = val('campaign') ? 'CMP-'+kebab(val('campaign')) : '';
   const title=kebab(val('scriptTitle'));
   const angle=kebab(val('angle'));
+  const num = String(n).padStart(2,'0');
+  const persona = kebab(val('persona'));
   if(currentType==='static'){
     const headline=kebab(v.f1);
-    return [id,product,cmp,title,angle,'STATIC',headline,ratio].filter(Boolean).join('_');
+    return [id,product,cmp,title,angle,num,'STATIC',headline,persona].filter(Boolean).join('_');
   }
-  const actor=kebab(v.f1), hook=kebab(v.f2);
-  const hookPart = hook ? 'HOOK-'+hook : '';
+  const actor=kebab(v.f1), type=kebab(v.f2);
   const source=val('source');
-  return [id,product,cmp,title,angle,actor,hookPart,ratio,source].filter(Boolean).join('_');
+  return [id,product,cmp,title,angle,num,actor,type,source,persona].filter(Boolean).join('_');
 }
 function currentNames(){
   if(!idClean(val('id'))) return [];
   const vars=collectVariations();
-  const rs=selectedRatios(); const ratios = rs.length ? rs : [''];
   const seen=new Set(); const out=[];
-  vars.forEach(v=> ratios.forEach(r=>{ const n=composeName(v,r); if(n && !seen.has(n)){ seen.add(n); out.push(n); } }));
+  vars.forEach((v,i)=>{ const n=composeName(v, i+1); if(n && !seen.has(n)){ seen.add(n); out.push(n); } });
   return out;
 }
 
@@ -295,9 +333,9 @@ function setType(type){
   document.querySelectorAll('#seg button').forEach(b=> b.classList.toggle('active', b.dataset.type===type));
   const isStatic = type==='static';
   document.getElementById('vl1').textContent = isStatic ? 'Headline' : 'Actor';
-  document.getElementById('vl2').textContent = isStatic ? '' : 'Hook';
   document.querySelector('.vhead').classList.toggle('single', isStatic);
   document.getElementById('variations').classList.toggle('single', isStatic);
+  document.querySelectorAll('.vf1').forEach(i=>{ if(isStatic) i.removeAttribute('list'); else i.setAttribute('list','actorlist'); });
   applyPlaceholders(); rebuildOutputs();
 }
 
@@ -315,7 +353,7 @@ async function peekId(){
     hint.classList.remove('warn');
     hint.innerHTML='Next free ID is <b>'+j.next+'</b>. Click <b>Get ID</b> to claim it for this task.';
   }catch(e){
-    document.getElementById('id').placeholder='e.g. 100';
+    document.getElementById('id').placeholder='e.g. 62';
     hint.classList.add('warn'); hint.innerHTML="Couldn't reach the ID service. <b>Type the next number manually</b>.";
   }
 }
@@ -337,23 +375,28 @@ fillSelect('source', SOURCES, 'INT');
 addVariation();
 peekId();
 loadAngles();
+loadPersonas();
+loadTypes();
+loadActors();
 rebuildOutputs();
 
 document.querySelectorAll('#seg button').forEach(b=> b.addEventListener('click', ()=> setType(b.dataset.type)));
 document.getElementById('getid').addEventListener('click', claimId);
 document.getElementById('addAngle').addEventListener('click', addAngle);
+document.getElementById('addType').addEventListener('click', addType);
+document.getElementById('addActor').addEventListener('click', addActor);
+document.getElementById('addPersona').addEventListener('click', addPersona);
 document.getElementById('addVar').addEventListener('click', ()=>{ addVariation(); rebuildOutputs(); });
-document.querySelectorAll('#id,#product,#source,#scriptTitle,#angle,#campaign').forEach(el=>{ el.addEventListener('input', rebuildOutputs); el.addEventListener('change', rebuildOutputs); });
-document.querySelectorAll('#ratios button').forEach(b=> b.addEventListener('click', ()=>{ b.classList.toggle('on'); rebuildOutputs(); }));
+document.querySelectorAll('#id,#product,#source,#scriptTitle,#angle,#campaign,#persona').forEach(el=>{ el.addEventListener('input', rebuildOutputs); el.addEventListener('change', rebuildOutputs); });
 document.getElementById('fileList').addEventListener('click', e=>{ const b=e.target.closest('button.copy'); if(b) copyText(b.dataset.copy,b); });
 document.getElementById('copyAll').addEventListener('click', e=> copyText(lastNames.join('\n'), e.target));
 document.getElementById('reset').addEventListener('click', ()=>{
   ['id','scriptTitle','campaign'].forEach(id=> document.getElementById(id).value='');
   document.getElementById('product').selectedIndex=0;
   document.getElementById('angle').selectedIndex=0;
+  document.getElementById('persona').selectedIndex=0;
   document.getElementById('source').value='INT';
   document.getElementById('variations').innerHTML=''; addVariation();
-  document.querySelectorAll('#ratios button').forEach(b=> b.classList.toggle('on', b.dataset.r==='9x16'));
   rebuildOutputs();
 });
 </script>
